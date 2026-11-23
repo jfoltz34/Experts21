@@ -18,6 +18,7 @@ This folder holds desk research on opening an **upscale brunch restaurant in Tam
 | 08 | [08-marketing.md](08-marketing.md) | Positioning, pre-opening playbook, channels, calendar, KPIs | Marketing |
 | 09 | [09-risks.md](09-risks.md) | Ranked risk register, mitigations, go/no-go gates | Risk / Strategy (all agents) |
 | — | [expert-roster.md](expert-roster.md) | The 28 agents (26 experts + orchestrator + meta agent), their job descriptions, and the skills mapped to the agents that use them (generated from `.claude/`) | Consultant / all agents |
+| — | [how-to-talk-to-your-experts.md](how-to-talk-to-your-experts.md) | How to ask the whole team or one expert, with example multi-expert prompts | Consultant |
 | — | [decision-log.md](decision-log.md) | Decisions the consultant has made; overrides the research pack | All agents |
 | — | [team-changelog.md](team-changelog.md) | History of changes to the agents and skills | Meta agent |
 

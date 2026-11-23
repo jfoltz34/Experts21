@@ -47,6 +47,8 @@ Example questions:
 | Risk | `risk-insurance-advisor` |
 | Team | `orchestrator` (routes questions and combines answers), `meta-agent` (builds and improves agents and skills) |
 
+See `docs/how-to-talk-to-your-experts.md` for ready-to-use example prompts.
+
 `docs/expert-roster.md` has every agent's job description, every skill, and which agents use each skill.
 
 ## Project rules (apply to every agent and to the main session)
