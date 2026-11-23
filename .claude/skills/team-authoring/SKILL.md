@@ -43,6 +43,7 @@ Official references: https://code.claude.com/docs/en/sub-agents and https://code
 ---
 name: <kebab-name>
 description: <Role> for the Tampa brunch project. <What it owns>. Use for <triggers>.
+model: <opus|sonnet|haiku>    # see "Choosing a brain" below
 disallowedTools: Agent        # experts don't spawn subagents
 skills:
   - research-pack-navigation  # always
@@ -51,12 +52,31 @@ skills:
 color: <domain color>
 ---
 
-<!-- roster: id=A<NN> | title=<Display Title> | domain=<Domain> | docs=<01, 05> -->
+<!-- roster: id=A<NN> | title=<Display Title> | domain=<Domain> | docs=<01, 05> | persona=<FirstName> -->
 **Job:** <one-line job description used in docs/expert-roster.md>
 
-You are ... (persona, mandate, ground truth, how you work, hand-offs, output)
+## Persona
+
+Your name is **<FirstName>**. Voice: <voice>. Working style: <style>.
+Sign every memo as "<FirstName> (<Display Title>)". Let the personality shape tone, never accuracy.
+
+## Always read your knowledge folder first
+
+Before answering anything, list and read the documents in `knowledge/<kebab-name>/` ...
+
+You are ... (background, mandate, ground truth, how you work, hand-offs, output)
 ```
 
+- **Choosing a brain (`model`):**
+  - `opus` for deep strategy, legal and finance judgment, and cross-expert synthesis.
+  - `sonnet` for most specialist work.
+  - `haiku` for fast, simple lookups and structured repetitive work. Haiku agents must hand judgment calls to a colleague.
+- **Personas:** give each agent a unique first name, a voice and a working style. No two agents share a first name. Don't use real public figures.
+- **Every agent needs:**
+  - A row in `docs/agent-brains.md` (agent, name, brain, why, voice, working style).
+  - A `knowledge/<kebab-name>/README.md` explaining what documents belong there.
+  - A row in `knowledge/README.md`.
+  - The validator checks the brains row, the README, and the knowledge-folder instruction.
 - Domain colors: Strategy and Team purple, Concept orange, Real Estate yellow, Finance green, Legal and Risk red, Operations blue, Marketing pink, Technology cyan.
 - Skill frontmatter must include `metadata` with `id` (S<NN>), `title`, `category`, `summary`. Workflow skills use category `Workflow`.
 - Use the next free ID numbers. Never reuse a retired ID.
@@ -69,6 +89,8 @@ You are ... (persona, mandate, ground truth, how you work, hand-offs, output)
    - Add the skill to each agent's `skills:` list.
    - Add a new agent to the **directory table and routing recipes** in `.claude/skills/expert-routing/SKILL.md`.
    - Add a new agent to the `Agent(...)` list in `.claude/agents/orchestrator.md`.
+   - Create `knowledge/<name>/README.md` and add the agent to `knowledge/README.md`.
+   - Add a row to `docs/agent-brains.md`. If you change a model or persona, update the row.
    - Update the team table in `CLAUDE.md` if the change affects how people use the team.
 4. **Validate:** `python3 tools/team.py validate`. Fix every error.
 5. **Regenerate the roster:** `python3 tools/team.py roster` (rewrites `docs/expert-roster.md`).

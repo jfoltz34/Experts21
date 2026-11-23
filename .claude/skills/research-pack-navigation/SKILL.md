@@ -10,7 +10,7 @@ metadata:
 
 # Research Pack Navigation & Citation
 
-The project's shared knowledge lives in `docs/`. Read the files you need before answering. Never contradict them silently: if you disagree, say so and explain why.
+**Start with your own knowledge folder:** `knowledge/<your-agent-name>/` holds the consultant's materials for you specifically, and it overrides `docs/` when they conflict. Then use the project's shared knowledge in `docs/`. Read the files you need before answering. Never contradict them silently: if you disagree, say so and explain why.
 
 ## Which file answers what
 
@@ -27,6 +27,8 @@ The project's shared knowledge lives in `docs/`. Read the files you need before 
 | `docs/08-marketing.md` | Positioning, pre-opening playbook, channels, calendar |
 | `docs/09-risks.md` | Ranked risk register, mitigations, go/no-go gates |
 | `docs/expert-roster.md` | Who is on the expert team and which skills each has |
+| `docs/agent-brains.md` | Each agent's name, personality and model, and why |
+| `knowledge/<agent-name>/` | Per-expert documents from the consultant (read your own first) |
 | `docs/decision-log.md` | Decisions the consultant has already made. **Check this before recommending anything.** |
 
 ## Shared reference concept (keep every answer consistent with it)

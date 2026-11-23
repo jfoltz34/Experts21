@@ -5,6 +5,8 @@ This repository is a working **team of expert AI agents** that advises a consult
 - `docs/`: the research pack (market, customers, competitors, costs, permits, staffing, marketing, risks), the expert roster, the decision log and the team changelog.
 - `.claude/agents/`: 28 project subagents. There are 26 domain experts, plus an orchestrator and a meta agent.
 - `.claude/skills/`: 39 project skills. 37 are shared knowledge and procedure skills preloaded into the agents, and 2 are commands you type.
+- `knowledge/<agent-name>/`: one folder per agent for the consultant's own documents. Each agent reads its folder before answering. See `knowledge/README.md`.
+- `docs/agent-brains.md`: each agent's model (opus, sonnet or haiku) and why, plus its persona (first name, voice, working style).
 - `tools/team.py`: validates the team and regenerates `docs/expert-roster.md`.
 
 ## How to use the team
@@ -49,11 +51,17 @@ Example questions:
 
 See `docs/how-to-talk-to-your-experts.md` for ready-to-use example prompts.
 
+**Brains and personalities:**
+- Every agent has a first name and a distinct voice. For example, Theo runs the panel, Nora is FP&A, Celeste is the liquor/zoning attorney, and Inés is the chef. Team answers attribute points by name and role, such as (Nora, FP&A).
+- Deep strategy, legal and finance roles run on **opus**, most specialists on **sonnet**, and three lookup-heavy roles on **haiku**. See `docs/agent-brains.md` for the full table.
+
+**Giving an expert your documents:** drop a file into `knowledge/<agent-name>/`, for example a broker's LOI into `knowledge/real-estate-advisor/`. That expert reads it before every answer, and it overrides `docs/` for that expert.
+
 `docs/expert-roster.md` has every agent's job description, every skill, and which agents use each skill.
 
 ## Project rules (apply to every agent and to the main session)
 
-1. **Ground answers in `docs/`.** Respect the **Estimate** and **Verify** labels. Facts are current as of November 2026. Check `docs/decision-log.md` before recommending anything, and record new consultant decisions there.
+1. **Each agent reads `knowledge/<its-name>/` first, then grounds answers in `docs/`.** Respect the **Estimate** and **Verify** labels. Facts are current as of November 2026. Check `docs/decision-log.md` before recommending anything, and record new consultant decisions there.
 2. **Stay consistent with the reference concept** in `docs/README.md` (about 160 seats, about 4,000 sq ft, daytime brunch, full bar), unless the decision log changes it.
 3. **Every recommendation names the risks it affects** in `docs/09-risks.md`, and must survive the **conservative** financial case.
 4. **Legal, tax and insurance outputs are advisory.** They must say a licensed professional should confirm.
@@ -63,8 +71,9 @@ See `docs/how-to-talk-to-your-experts.md` for ready-to-use example prompts.
 ## Conventions for agents and skills (summary; full rules in `.claude/skills/team-authoring/SKILL.md`)
 
 - **Agents:**
-  - Frontmatter has `name`, a short `description`, `disallowedTools: Agent` (experts don't delegate), `skills:` (preloaded skills), and `color`.
-  - The body starts with a roster comment (`<!-- roster: id=.. | title=.. | domain=.. | docs=.. -->`) and a `**Job:**` line.
+  - Frontmatter has `name`, a short `description`, a `model`, `disallowedTools: Agent` (experts don't delegate), `skills:` (preloaded skills), and `color`.
+  - The body starts with a roster comment (`<!-- roster: id=.. | title=.. | domain=.. | docs=.. | persona=.. -->`), a `**Job:**` line, a `## Persona` section, and the instruction to read `knowledge/<name>/` first.
+  - Each agent also needs `knowledge/<name>/README.md` and a row in `docs/agent-brains.md`.
 - **Skills:**
   - The directory name equals `name`.
   - Frontmatter includes `metadata` with `id`, `title`, `category`, `summary`.

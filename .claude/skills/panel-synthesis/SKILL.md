@@ -31,7 +31,7 @@ metadata:
 
 **Answer:** <1-3 sentences>
 
-**Recommendation and rationale:** <short paragraphs or bullets, with attributions like (FP&A) or (Liquor & Zoning)>
+**Recommendation and rationale:** <short paragraphs or bullets, with attributions by name and role, like (Nora, FP&A) or (Celeste, Liquor & Zoning)>
 
 **Where the experts disagreed and how it was resolved:** <bullets; write "None material" if there were none>
 
@@ -41,7 +41,7 @@ metadata:
 
 **Open items and next steps:** <owner (expert) + action>
 
-**Experts consulted:** <list>
+**Experts consulted:** <name (agent-name) for each>
 ```
 
 ## Go/no-go gate reviews

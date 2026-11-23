@@ -24,6 +24,9 @@ ROOT = Path(__file__).resolve().parent.parent
 AGENTS_DIR = ROOT / ".claude" / "agents"
 SKILLS_DIR = ROOT / ".claude" / "skills"
 ROSTER = ROOT / "docs" / "expert-roster.md"
+BRAINS = ROOT / "docs" / "agent-brains.md"
+KNOWLEDGE_DIR = ROOT / "knowledge"
+MODELS = {"opus", "sonnet", "haiku", "fable", "inherit"}
 
 ORCHESTRATOR = "orchestrator"
 ROUTING_SKILL = "expert-routing"
@@ -178,9 +181,21 @@ def validate(agents, skills, errors, warnings):
                 errors.append(f"{rel}: skill '{s}' does not exist in .claude/skills/")
             elif skills[s]["fm"].get("disable-model-invocation") is True:
                 errors.append(f"{rel}: skill '{s}' sets disable-model-invocation and cannot be preloaded")
-        for k in ("id", "title", "domain", "docs"):
+        for k in ("id", "title", "domain", "docs", "persona"):
             if not a["meta"].get(k):
-                errors.append(f"{rel}: roster comment missing '{k}' (<!-- roster: id=.. | title=.. | domain=.. | docs=.. -->)")
+                errors.append(f"{rel}: roster comment missing '{k}' (<!-- roster: id=.. | title=.. | domain=.. | docs=.. | persona=.. -->)")
+        model = fm.get("model")
+        if not model:
+            errors.append(f"{rel}: no 'model' set (choose opus, sonnet or haiku and explain it in docs/agent-brains.md)")
+        elif model not in MODELS and not str(model).startswith("claude-"):
+            errors.append(f"{rel}: model '{model}' is not a known alias or claude-* ID")
+        if "## Persona" not in a["body"]:
+            errors.append(f"{rel}: missing '## Persona' section")
+        kdir = KNOWLEDGE_DIR / name
+        if not (kdir / "README.md").exists():
+            errors.append(f"knowledge/{name}/README.md is missing")
+        if f"knowledge/{name}/" not in a["body"]:
+            errors.append(f"{rel}: prompt must tell the agent to read knowledge/{name}/ first")
         if not a["job"]:
             errors.append(f"{rel}: missing '**Job:** ...' line")
         aid = a["meta"].get("id")
@@ -256,6 +271,27 @@ def validate(agents, skills, errors, warnings):
         elif not used_by[sname]:
             errors.append(f"{rel}: not used by any agent (add it to an agent's skills or delete it)")
 
+    # --- brains table matches agent files
+    if not BRAINS.exists():
+        errors.append("docs/agent-brains.md is missing")
+    else:
+        brains = {}
+        for line in BRAINS.read_text().splitlines():
+            m = re.match(r"\|\s*`([a-z0-9-]+)`\s*\|\s*\*\*(.+?)\*\*\s*\|\s*([\w.-]+)\s*\|", line)
+            if m:
+                brains[m.group(1)] = (m.group(2), m.group(3))
+        for name, a in agents.items():
+            if name not in brains:
+                errors.append(f"docs/agent-brains.md: no row for '{name}'")
+                continue
+            persona, model = brains[name]
+            if model != str(a["fm"].get("model")):
+                errors.append(f"docs/agent-brains.md: '{name}' brain is {model} but its file says {a['fm'].get('model')}")
+            if persona != a["meta"].get("persona"):
+                errors.append(f"docs/agent-brains.md: '{name}' name is {persona} but its file says {a['meta'].get('persona')}")
+        for extra in sorted(set(brains) - set(agents)):
+            errors.append(f"docs/agent-brains.md: row for unknown agent '{extra}'")
+
     # --- routing directory covers every agent
     if ROUTING_SKILL in skills:
         text = skills[ROUTING_SKILL]["text"]
@@ -293,7 +329,8 @@ def build_roster(agents, skills, used_by) -> str:
     w("Built from the research pack in this folder (see [README.md](README.md)). Every role below is a "
       "Claude Code project subagent in `.claude/agents/<name>.md`, and every skill is a project skill in "
       "`.claude/skills/<name>/SKILL.md`. Each agent preloads its skills through the `skills:` field in its "
-      "frontmatter. See [../CLAUDE.md](../CLAUDE.md) for how to use the team.")
+      "frontmatter, reads its own `knowledge/<name>/` folder before answering, and runs on the model (\"brain\") "
+      "explained in [agent-brains.md](agent-brains.md). See [../CLAUDE.md](../CLAUDE.md) for how to use the team.")
     w("")
     w(f"**{len(agents)} agents** across {len(domains)} domains, **{len(domain_skills)} shared skills**, "
       f"and **{len(workflow)} entry-point commands**.")
@@ -303,12 +340,13 @@ def build_roster(agents, skills, used_by) -> str:
     for d in domains:
         w(f"### {d}")
         w("")
-        w("| ID | Agent (`name`) | One-line job description | Primary docs |")
-        w("|---|---|---|---|")
+        w("| ID | Agent (`name`) | Name | Brain | One-line job description | Primary docs |")
+        w("|---|---|---|---|---|---|")
         for n in names:
             if agents[n]["meta"].get("domain") == d:
                 m = agents[n]["meta"]
-                w(f"| {m.get('id')} | **{title[n]}** (`{n}`) | {agents[n]['job']} | {m.get('docs', '')} |")
+                w(f"| {m.get('id')} | **{title[n]}** (`{n}`) | {m.get('persona', '')} | {agents[n]['fm'].get('model', '')} | "
+                  f"{agents[n]['job']} | {m.get('docs', '')} |")
         w("")
     w("## 2. Skills and the agents that use them")
     w("")

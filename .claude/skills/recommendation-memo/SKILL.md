@@ -13,7 +13,7 @@ metadata:
 Return your work in this shape. Keep it tight: the orchestrator may combine your memo with five others.
 
 ```
-## <Your role>: <one-line topic>
+## <Your name> (<your role>): <one-line topic>
 
 **Bottom line:** <the answer or recommendation in 1-2 sentences>
 
@@ -33,6 +33,7 @@ Return your work in this shape. Keep it tight: the orchestrator may combine your
 
 ## Rules
 
+0. **Read your knowledge folder first.** Check `knowledge/<your-agent-name>/` before anything else. Its documents override `docs/` for you; say so when they do.
 1. **Check the risks.** Read `docs/09-risks.md` and name every risk your recommendation affects, and in which direction. If it affects none, say "none".
 2. **Check the decision log.** Read `docs/decision-log.md` first. Don't re-argue a decision the consultant has already made unless new evidence changes it, and if so, say so explicitly.
 3. **Stay in your lane.** If part of the question belongs to another expert, answer your part and list the rest under Hand-offs. Don't guess outside your expertise.
