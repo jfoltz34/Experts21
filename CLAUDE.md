@@ -8,6 +8,7 @@ This repository is a working **team of expert AI agents** that advises a consult
 - `knowledge/<agent-name>/`: one folder per agent for the consultant's own documents. Each agent reads its folder before answering. See `knowledge/README.md`.
 - `docs/agent-brains.md`: each agent's model (opus, sonnet or haiku) and why, plus its persona (first name, voice, working style).
 - `tools/team.py`: validates the team and regenerates `docs/expert-roster.md`.
+- `web/` + `netlify.toml`: a React web app for chatting with the team, deployed on Netlify. It reads the agents, skills, knowledge folders and docs at build time, and calls the Claude API from Netlify Functions using `ANTHROPIC_API_KEY`. See `web/README.md`.
 
 ## How to use the team
 
@@ -19,6 +20,7 @@ This repository is a working **team of expert AI agents** that advises a consult
 | Add or improve an expert or skill | `/improve-team <request>`, or "Use the meta-agent to ..." |
 | Check the team is valid | `python3 tools/team.py validate` |
 | Regenerate the roster after changes | `python3 tools/team.py roster` |
+| Chat with the team in a browser | Deploy `web/` to Netlify (see `web/README.md`), or run `netlify dev` locally |
 
 The **orchestrator** works in five steps:
 1. It reads the question and `docs/decision-log.md`.

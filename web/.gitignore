@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.netlify/
+# generated at build time from the repo (.claude/, knowledge/, docs/)
+src/generated/
+netlify/lib/team-data.generated.mjs

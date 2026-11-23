@@ -1,0 +1,27 @@
+# Netlify builds the expert chat app in web/ with no extra settings.
+# Set ANTHROPIC_API_KEY (and optionally APP_PASSWORD) in the Netlify UI:
+# Site configuration > Environment variables. See web/README.md.
+
+[build]
+  base = "web"                   # run the build from web/ (the whole repo is still checked out)
+  command = "npm run build"      # reads ../.claude, ../knowledge and ../docs, then builds with Vite
+  publish = "dist"               # relative to base
+  functions = "netlify/functions"
+  # Rebuild when the team, knowledge folders or docs change, not only web/.
+  # (With a base directory set, Netlify otherwise skips builds when nothing
+  # under web/ changed.) Exit 0 = skip the build, exit 1 = build.
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ../.claude ../knowledge ../docs ../CLAUDE.md ../netlify.toml"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Robots-Tag = "noindex"

@@ -149,7 +149,16 @@ The orchestrator returns one answer in this shape:
 - **Follow up with one expert** when the team answer raises a deep question in a single domain. For example: "@agent-fpa-analyst show me the monthly cash flow for that option."
 - **Legal, tax and insurance answers are advisory.** Confirm them with a licensed professional before acting.
 
-## 6. Changing the team itself
+## 6. Using the web app
+
+If you've deployed the web app (see [../web/README.md](../web/README.md)):
+
+- Click **Ask the whole team** for a panel answer. Theo picks the experts, you can expand each expert's memo, and Theo's combined answer appears below them.
+- Click any name in the sidebar to chat with that expert directly. Each expert's model and voice are shown, and the header lists the files in its knowledge folder.
+- The example prompts above work there too. Paste them without the `/ask-experts` prefix.
+- Web agents can't open files or edit the repo. Their knowledge folders and docs are built in when the site deploys, so push new documents to `main` to update them.
+
+## 7. Changing the team itself
 
 To add an expert or improve one, ask the meta agent:
 
